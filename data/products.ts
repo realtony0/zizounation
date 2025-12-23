@@ -46,3 +46,32 @@ export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);
 };
 
+// Helper function to get variant image
+export const getVariantImage = (productId: string, variant: string): string => {
+  // Mapping des variants aux images
+  const variantImageMap: Record<string, Record<string, string>> = {
+    rodman: {
+      'Allstar': '/allstar.jpeg',
+      'Pineapple Banana Ice': '/pineapplebananaice.jpeg',
+      'Buzzer Beater': '/buzzerbeater.jpeg',
+      'Cool Mint': '/coolmint.jpeg',
+      'Peach Berry': '/peachberry.jpeg',
+    },
+    coolbar: {
+      'Watermelon Ice': '/watermelonice.webp',
+      'Red Bull Ice': '/redbullice.webp',
+      'Sparkling Lemon': '/sparklinglemon.webp',
+      'Mixed Berries': '/mixedberries.webp',
+      'Peach Ice': '/peachice.webp',
+      'Double Mint': '/doublemint.webp',
+      'Cola Ice': '/colaice.webp',
+    },
+  };
+
+  // Retourner l'image du variant ou l'image par défaut du produit
+  const product = getProductById(productId);
+  if (!product) return '/coolbar1.jpeg'; // Image par défaut
+
+  return variantImageMap[productId]?.[variant] || product.image;
+};
+

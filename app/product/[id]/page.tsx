@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProductById } from '@/data/products';
+import { getProductById, getVariantImage } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 
 export default function ProductDetailPage() {
@@ -17,6 +17,7 @@ export default function ProductDetailPage() {
   const [selectedVariant, setSelectedVariant] = useState(product?.variants[0] || '');
   const [quantity, setQuantity] = useState(1);
   const [showNotification, setShowNotification] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
 
   if (!product) {
     return (
@@ -71,13 +72,18 @@ export default function ProductDetailPage() {
           <div className="animate-slide-up">
             <div className="relative h-96 lg:h-[600px] bg-gray-800 rounded-2xl overflow-hidden border border-gray-700">
               <Image
-                src={product.image}
-                alt={product.name}
+                key={selectedVariant}
+                src={getVariantImage(product.id, selectedVariant)}
+                alt={`${product.name} - ${selectedVariant}`}
                 fill
-                className="object-cover"
+                className={`object-cover transition-opacity duration-500 ${
+                  imageLoading ? 'opacity-0' : 'opacity-100'
+                }`}
                 priority
                 quality={100}
                 sizes="(max-width: 768px) 100vw, 50vw"
+                onLoad={() => setImageLoading(false)}
+                onLoadStart={() => setImageLoading(true)}
               />
             </div>
           </div>
@@ -145,7 +151,10 @@ export default function ProductDetailPage() {
                 {product.variants.map((variant) => (
                   <button
                     key={variant}
-                    onClick={() => setSelectedVariant(variant)}
+                    onClick={() => {
+                      setImageLoading(true);
+                      setSelectedVariant(variant);
+                    }}
                     className={`p-4 rounded-xl border-2 transition-all ${
                       selectedVariant === variant
                         ? 'border-primary bg-primary/10 text-white'
