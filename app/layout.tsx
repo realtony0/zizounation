@@ -12,9 +12,6 @@ export const metadata: Metadata = {
   title: 'Zizounation - Expérience de Vape Premium',
   description: 'Boutique de produits de vape premium - RODMAN 15000 bouffées & Coolbar 12000 bouffées',
   keywords: 'vape, bouffées, RODMAN, Coolbar, vape premium',
-  icons: {
-    icon: '/favicon.png',
-  },
 };
 
 export default function RootLayout({
